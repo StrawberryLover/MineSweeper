@@ -66,11 +66,11 @@ public class Board {
 		
 		BufferedImage myBoard = window.getBoard(widht ,height);
 		
-		analaysMove(myBoard);
+		analyzeMove(myBoard);
 		System.out.println("Done");
 	}
 
-	private void analaysMove(BufferedImage myBoard) throws InterruptedException {
+	private void analyzeMove(BufferedImage myBoard) throws InterruptedException {
 		int i, j, c;
 		
 		for(i = 0; i < widht; i++) {
