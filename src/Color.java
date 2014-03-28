@@ -1,7 +1,6 @@
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-
 public class Color {
 	
 	public static boolean isOne(Point point, BufferedImage myBoard) {

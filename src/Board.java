@@ -16,8 +16,8 @@ public class Board {
 		this.cellSize = _cellSize;
 		this.widht = w;
 		this.height = h;
-		this.board = new int [w][h];			//Contains Board
-		this.valuedBoard = new double [w][h]; 	//Contains Board with each cells heuristic
+		this.board = new int[w][h];			//Contains Board
+		this.valuedBoard = new double[w][h]; 	//Contains Board with each cells heuristic
 	}
 	
 	public void info() {
@@ -67,15 +67,15 @@ public class Board {
 		BufferedImage myBoard = window.getBoard(widht ,height);
 		
 		analaysMove(myBoard);
-		upDateBoard(myBoard);
-		
 		System.out.println("Done");
 	}
 
 	private void analaysMove(BufferedImage myBoard) throws InterruptedException {
-		for(int i = 0; i < widht; i++) {
-			for(int j = 0; j < height; j++) {
-				int c = window.getCell(i, j, myBoard);
+		int i, j, c;
+		
+		for(i = 0; i < widht; i++) {
+			for(j = 0; j < height; j++) {
+				c = window.getCell(i, j, myBoard);
 
 				System.out.print("["+i+"]["+j+"]");
 				Color.toString(c);
@@ -99,35 +99,5 @@ public class Board {
 	    	board[x][y] = -1;
 		} else
 			System.out.println("Not Found");
-	}
-	
-	private void upDateBoard(BufferedImage myBoard) {
-		for(int i = 0; i < widht; i++) {
-			for(int j = 0; j < height; j++) {
-				if(board[i][j] > 0) {
-					setHeuristic(i, j, board[i][j]);
-				}
-			}
-		}
-	}
-
-	private void setHeuristic(int x, int y, int value) {
-		ArrayList<Point> list = new ArrayList<Point>();
-		
-		for(int i = x-1; i < x+2; i++) {
-			for(int j = y-1; j < y+2; j++) {
-				if((i >= 0 && j >= 0) && (i < widht && j < height)) {
-					if(board[i][j] == 0)
-						list.add(new Point(i, j));
-				}
-			}
-		}
-		
-			double present = 100 / list.size();
-		present = present / value;
-
-		for(Point cell : list) {
-			valuedBoard[cell.x][cell.y] = present;
-		}
 	}
 }
