@@ -7,9 +7,9 @@ public class Constraint {
 	List<Point> cells; 
 	int value; 
 	
-	public Constraint(List<Point> cells, int totalBombs) {
+	public Constraint(List<Point> cells, int value) {
 		this.cells = cells; 
-		this.value = totalBombs; 
+		this.value = value; 
 	}
 	
 	@Override 

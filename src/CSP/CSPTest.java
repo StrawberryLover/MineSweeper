@@ -94,7 +94,119 @@ public class CSPTest {
 		assertEquals(3, csp.constraints.get(2).value);
 		assertEquals(new Point(5,5), csp.constraints.get(2).cells.get(0));
 		assertEquals(new Point(6,6), csp.constraints.get(2).cells.get(1));
-		
 	}
-
+	
+	@Test
+	public void testNewConstraintFromPoint1() {
+		csp.knownPoints = new int[3][3]; 
+		csp.newConstraintFromPoint(new Point(1,1), 2); 
+		assertEquals(1, csp.constraints.size()); 
+		assertEquals(8, csp.constraints.get(0).cells.size());
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(2,2)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,2)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,2)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,1)));
+	}
+	
+	@Test
+	public void testNewConstraintFromPoint2() {
+		csp.knownPoints = new int[3][3]; 
+		csp.newConstraintFromPoint(new Point(0,0), 2); 
+		assertEquals(1, csp.constraints.size()); 
+		assertEquals(3, csp.constraints.get(0).cells.size());
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,1)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,1)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,0)));
+	}
+	
+	@Test
+	public void testNewConstraintFromPoint3() {
+		csp.knownPoints = new int[3][3]; 
+		csp.newConstraintFromPoint(new Point(2,2), 2); 
+		assertEquals(1, csp.constraints.size()); 
+		assertEquals(3, csp.constraints.get(0).cells.size());
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(2,1)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,1)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,2)));
+	}
+	
+	@Test
+	public void testNewConstraintFromPoint4() {
+		csp.knownPoints = new int[3][3]; 
+		csp.newConstraintFromPoint(new Point(1,2), 2); 
+		assertEquals(1, csp.constraints.size()); 
+		assertEquals(5, csp.constraints.get(0).cells.size());
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,2)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(2,2)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(1,1)));
+		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,1)));
+	}
+	
+	@Test
+	public void testNewConstraintFromPoint5() {
+		csp.knownPoints = new int[1][1]; 
+		csp.newConstraintFromPoint(new Point(0,0), 2);
+		assertEquals(0, csp.constraints.size());
+	}
+	
+	@Test
+	public void testGetKnownBombs() {
+		List<Point> points = new ArrayList<Point>(); 
+		points.add(new Point(1,1)); 
+		points.add(new Point(2,2)); 
+		csp.constraints.add(new Constraint(points, 2)); 
+		points = new ArrayList<Point>(); 
+		points.add(new Point(3,3)); 
+		points.add(new Point(4,4)); 
+		csp.constraints.add(new Constraint(points, 4)); 
+		
+		List<Point> bombs = csp.getKnownBombs(); 
+		assertEquals(2, bombs.size()); 
+		assertEquals(true, bombs.contains(new Point(1,1)));
+		assertEquals(true, bombs.contains(new Point(2,2)));
+		assertEquals(false, bombs.contains(new Point(3,3)));
+	}
+	
+	@Test
+	public void testGetKnownClearPoints() {
+		List<Point> points = new ArrayList<Point>(); 
+		points.add(new Point(1,1)); 
+		points.add(new Point(2,2)); 
+		csp.constraints.add(new Constraint(points, 2)); 
+		points = new ArrayList<Point>(); 
+		points.add(new Point(3,3)); 
+		points.add(new Point(4,4)); 
+		csp.constraints.add(new Constraint(points, 0)); 
+		
+		List<Point> clears = csp.getKnownClearPoints(); 
+		assertEquals(2, clears.size());
+		assertEquals(true, clears.contains(new Point(3,3)));
+		assertEquals(true, clears.contains(new Point(4,4)));
+	}
+	
+	@Test
+	public void removePointFromConstraints() {
+		List<Point> points = new ArrayList<Point>(); 
+		points.add(new Point(1,1)); 
+		points.add(new Point(2,2)); 
+		points.add(new Point(3,3)); 
+		points.add(new Point(4,4)); 
+		csp.constraints.add(new Constraint(points, 2));
+		List<Point> points2 = new ArrayList<Point>(); 
+		points2.add(new Point(1,1)); 
+		points2.add(new Point(2,2));
+		points2.add(new Point(5,5));
+		csp.constraints.add(new Constraint(points2, 1));
+		List<Point> points3 = new ArrayList<Point>(); 
+		points3.add(new Point(6,6));
+		points3.add(new Point(7,7)); 
+		csp.constraints.add(new Constraint(points3,1));
+		
+		csp.removePointFromConstraints(new Point(1,1));
+		
+		assertEquals(false, csp.constraints.get(0).cells.contains(new Point(1,1)));
+		assertEquals(3, csp.constraints.get(0).cells.size());
+		assertEquals(2, csp.constraints.get(1).cells.size());
+		assertEquals(2, csp.constraints.get(2).cells.size());
+	}
 }

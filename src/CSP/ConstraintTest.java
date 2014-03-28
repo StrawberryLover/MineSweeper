@@ -38,6 +38,4 @@ public class ConstraintTest {
 		c2.cells.add(new Point(4,4));
 		assertEquals(false, c1.equals(c2));
 	}
-	
-
 }
