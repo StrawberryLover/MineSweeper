@@ -43,7 +43,7 @@ public class Board {
 
 	public void touch() throws InterruptedException {
 		int i, j;
-		
+
 		for(i = 0; i < widht; i++) {
 			for(j = 0; j < height; j++) {
 				window.moveTo(i, j);
@@ -53,6 +53,9 @@ public class Board {
 
 	public boolean isWin() {
 		int i, j;
+		
+		if(window.isDone())
+			return true;
 		
 		for(i = 0; i < widht; i++) {
 			for(j = 0; j < height; j++) {
@@ -74,8 +77,8 @@ public class Board {
 		BufferedImage myBoard = window.getBoard(widht ,height);
 		analyzeMove(myBoard);
 	
-		solver.removePointFromConstraints(p);
-		solver.newConstraintFromPoint(p, board[p.x][p.y]);
+		solver.removeConstraints(p);
+		solver.newConstraint(p, board[p.x][p.y]);
 	}
 
 	private void analyzeMove(BufferedImage myBoard) throws InterruptedException {
@@ -100,7 +103,7 @@ public class Board {
 	    	board[x][y] = 3;
 	    } else if(Color.isFour(pos, myBoard)) {				//Cell is 4
 	    	board[x][y] = 4;
-	    } else												//Empty Cell
+	    } else if(Color.isGray(c))											//Empty Cell
 	    	board[x][y] = -1;
 	}
 }

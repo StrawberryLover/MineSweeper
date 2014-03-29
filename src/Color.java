@@ -110,6 +110,14 @@ public class Color {
 	    return false;
 	}
 	
+	public static boolean isEndScreen(int c) {
+		int r = (c >> 16) & 0xFF;
+	    int g = (c >> 8) & 0xFF;
+	    int b = c & 0xFF;
+	    
+	    return r == 240 && b == 240 && c == 240;
+	}
+	
 	public static void toString(int c) { 
 		int r = (c >> 16) & 0xFF;
 	    int g = (c >> 8) & 0xFF;

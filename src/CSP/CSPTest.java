@@ -106,7 +106,7 @@ public class CSPTest {
 	@Test
 	public void testNewConstraintFromPoint1() {
 		setUpTestNewConstraint(); 
-		csp.newConstraintFromPoint(new Point(1,1), 2); 
+		csp.newConstraint(new Point(1,1), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(8, csp.constraints.get(0).cells.size());
 		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(2,2)));
@@ -118,7 +118,7 @@ public class CSPTest {
 	@Test
 	public void testNewConstraintFromPoint2() {
 		setUpTestNewConstraint(); 
-		csp.newConstraintFromPoint(new Point(0,0), 2); 
+		csp.newConstraint(new Point(0,0), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(3, csp.constraints.get(0).cells.size());
 		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,1)));
@@ -129,7 +129,7 @@ public class CSPTest {
 	@Test
 	public void testNewConstraintFromPoint3() {
 		setUpTestNewConstraint(); 
-		csp.newConstraintFromPoint(new Point(2,2), 2); 
+		csp.newConstraint(new Point(2,2), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(3, csp.constraints.get(0).cells.size());
 		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(2,1)));
@@ -140,7 +140,7 @@ public class CSPTest {
 	@Test
 	public void testNewConstraintFromPoint4() {
 		setUpTestNewConstraint(); 
-		csp.newConstraintFromPoint(new Point(1,2), 2); 
+		csp.newConstraint(new Point(1,2), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(5, csp.constraints.get(0).cells.size());
 		assertEquals(true, csp.constraints.get(0).cells.contains(new Point(0,2)));
@@ -152,7 +152,7 @@ public class CSPTest {
 	@Test
 	public void testNewConstraintFromPoint5() {
 		csp.knownPoints = new int[1][1]; 
-		csp.newConstraintFromPoint(new Point(0,0), 2);
+		csp.newConstraint(new Point(0,0), 2);
 		assertEquals(0, csp.constraints.size());
 	}
 	
@@ -209,7 +209,7 @@ public class CSPTest {
 		points3.add(new Point(7,7)); 
 		csp.constraints.add(new Constraint(points3,1));
 		
-		csp.removePointFromConstraints(new Point(1,1));
+		csp.removeConstraints(new Point(1,1));
 		
 		assertEquals(false, csp.constraints.get(0).cells.contains(new Point(1,1)));
 		assertEquals(3, csp.constraints.get(0).cells.size());
@@ -227,7 +227,7 @@ public class CSPTest {
 	@Test
 	public void end2endTest1() {
 		csp = new CSP(5,5); 
-		csp.newConstraintFromPoint(new Point(3,3), 0); 
+		csp.newConstraint(new Point(3,3), 0); 
 		assertEquals(new Point(2,2), csp.getNextMove()); 
 		
 	}

@@ -14,6 +14,12 @@ public class Calibration {
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	}
 	
+	public boolean isDone() {
+		int c = Img.getRGB(screenSize.width/2, screenSize.height/2);
+		
+		return Color.isEndScreen(c);
+	}
+	
 	public void moveTo(int x, int y) throws InterruptedException {
 		Me.mouseMove((beginX + x * cellSize) + cellSize/2 + x/2, (beginY + y * cellSize) + cellSize/2);
 		Thread.sleep(100);
@@ -27,7 +33,7 @@ public class Calibration {
 	public void mousePress(int x, int y) throws InterruptedException {
 		Me.mouseMove((beginX + x * cellSize) + cellSize/2 + x/2, (beginY + y * cellSize) + cellSize/2);
 		Me.mousePress(16);
-		Thread.sleep(5);
+		Thread.sleep(10);
 		Me.mouseRelease(16);
 		Thread.sleep(100);
 	}
@@ -72,7 +78,7 @@ public class Calibration {
 			for(int w= 50; w <  Img.getWidth(); w++){
 				int c = Img.getRGB(w, h);
 				
-		        if(w < 50 || h < 50 || w > Img.getWidth()-50 || h > Img.getHeight()-50) //Bottom and Top
+		        if(w < 50 || h < 50 || w > Img.getWidth()-50 || h > Img.getHeight()-50) //Ignore Bottom and Top
 		            continue;
 
 		          if(isTopLeft(c)) {
