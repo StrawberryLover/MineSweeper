@@ -13,11 +13,9 @@ public class Main {
 	public static void main(String[] args) throws AWTException, IOException, InterruptedException {
 		Calibration window = new Calibration();	
 		Process mineSweeper = setup(window);
-		Board game =  window.makeBoard();
-		
+		Board game =  window.makeBoard();		
 		game.info();		
-		game.print();
-		
+
 		while(!game.isWin()) {
 			game.makeMove();
 			game.print();

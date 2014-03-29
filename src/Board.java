@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+
 import CSP.CSP;
 
 
@@ -15,7 +16,7 @@ public class Board {
 		this.window = calibration;
 		this.cellSize = _cellSize;
 		this.widht = w;
-		this.height = h;	
+		this.height = h;
 		this.board = new int[w][h];			//Contains Board
 		this.solver = new CSP(w, h);
 	}
@@ -68,17 +69,30 @@ public class Board {
 	}
 
 	public void makeMove() throws InterruptedException {
+		int i, j;
 		Point p = solver.getNextMove();
 
-		window.mousePress(p.x, p.y);
-		Thread.sleep(500);
+		if(p == null) { //First Move
+			window.mousePress(0, 0);
+		} else {
+			window.mousePress(p.x, p.y);
+		}
+		
+		Thread.sleep(2000);
 		
 		/* Update board */
 		BufferedImage myBoard = window.getBoard(widht ,height);
 		analyzeMove(myBoard);
-	
-		solver.removePointFromConstraints(p);
-		solver.newConstraintFromPoint(p, board[p.x][p.y]);
+		
+		for(i = 0; i < widht; i++) {
+			for(j = 0; j < height; j++) {
+				if(board[i][j] != 0) {
+					p = new Point(i, j);
+					solver.removePointFromConstraints(p);
+					solver.newConstraintFromPoint(p, board[i][j]);
+				}
+			}
+		}
 	}
 
 	private void analyzeMove(BufferedImage myBoard) throws InterruptedException {
@@ -103,7 +117,7 @@ public class Board {
 	    	board[x][y] = 3;
 	    } else if(Color.isFour(pos, myBoard)) {				//Cell is 4
 	    	board[x][y] = 4;
-	    } else if(Color.isGray(c))											//Empty Cell
+	    } else if(Color.isGray(c))							//Empty Cell
 	    	board[x][y] = -1;
 	}
 }

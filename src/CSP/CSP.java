@@ -11,17 +11,14 @@ public class CSP {
 	
 	public CSP (int boardSizeX, int boardSizeY) {
 		knownPoints = new int[boardSizeX][boardSizeY]; 
+		constraints = new ArrayList<Constraint>();
+		
 		for (int i = 0; i < boardSizeX; i++) 
 			for (int n = 0; n < boardSizeY; n++) 
 				knownPoints[i][n] = -1;
-		construct();
 	}
 	
 	public CSP() {
-		construct(); 
-	}
-	
-	private void construct() {
 		constraints = new ArrayList<Constraint>();
 	}
 	
@@ -49,7 +46,6 @@ public class CSP {
 	 *  to a constraint with the value of the point. 
 	 */
 	public void newConstraintFromPoint(Point origin, int value) {
-		System.out.println("Adding constraint to point " + origin.x + "." + origin.y + " value " + value);
 		List<Point> points = new ArrayList<Point>();
 		knownPoints[origin.x][origin.y] = value; 
 		//add every point around the point to the constraint if it is unknown
@@ -57,7 +53,7 @@ public class CSP {
 		for (i = -1; i < 2; i++) {
 			for (n = -1; n < 2; n++) {
 				//if we are at the origin we obviously do nothing
-				if (!(i == 0 && n == 0)) {
+				if (i != 0 && n != 0) {
 					try { 
 						if (knownPoints[origin.x + i][origin.y + n] == -1) { 
 							points.add(new Point(origin.x+i, origin.y+n)); 
@@ -69,9 +65,11 @@ public class CSP {
 				}
 			}
 		}
+		
 		if (points.size() > 0) {
 			constraints.add(new Constraint(points, value));
 		}
+		
 		simplifyConstraints(); 
 	}
 	
@@ -87,7 +85,6 @@ public class CSP {
 	 * This should be called every time a new constraint is added to the list. 
 	 */
 	public void simplifyConstraints() {
-		System.out.println("Simplifying constraints...");
 		int i, n;
 		for (i = 0; i < constraints.size(); i++) {
 			for (n = 0; n < constraints.size(); n++) {
@@ -110,6 +107,7 @@ public class CSP {
 	 */
 	public List<Point> getKnownBombs() {
 		List<Point> bombs = new ArrayList<Point>();
+		
 		for (Constraint c : constraints) {
 			if (c.value == c.cells.size()) {
 				bombs.addAll(c.cells);
@@ -123,8 +121,8 @@ public class CSP {
 	 * Ex: The value of a constraint is 0, and it contains 0,1 and 0,2. Both are known to be not bombs. 
 	 */
 	public List<Point> getKnownClearPoints() {
-		System.out.println("Getting clear points...");
-		List<Point> clear = new ArrayList<Point>(); 
+		List<Point> clear = new ArrayList<Point>();
+		
 		for (Constraint c : constraints) {
 			if (c.value == 0) {
 				clear.addAll(c.cells); 
@@ -164,7 +162,8 @@ public class CSP {
 	 * The point with the lowest total chance is selected.
 	 */
 	public Point selectBestNonClear() {
-		Map<Point, Double> possibles = new HashMap<Point, Double>(); 
+		Map<Point, Double> possibles = new HashMap<Point, Double>();
+		
 		for (Constraint c : constraints) {
 			//If the constraint has a value of 1 and length of one, it's a bomb. 
 			if (!(c.cells.size() == 1 && c.value == 1)) {
@@ -195,6 +194,7 @@ public class CSP {
 		
 		double min = Double.POSITIVE_INFINITY; 
 		Point bestPoint = null; 
+		
 		for (Map.Entry entry : possibles.entrySet()) {
 			Point p = (Point) entry.getKey(); 
 			Double value = (Double) entry.getValue();
