@@ -16,14 +16,19 @@ public class Main {
 		Board game =  window.makeBoard();
 		
 		game.info();		
-		game.touch();
+		game.print();
+		
+		while(!game.isWin()) {
+			game.makeMove();
+			game.print();
+		}
 	}
 	
 	public static Process setup(Calibration window) throws IOException, InterruptedException {
 		String[] path = new String[] {"C:" + File.separator + "Program Files" + File.separator + "Microsoft Games" + File.separator + "Minesweeper" + File.separator +"MineSweeper.exe"};
 		Process p = Runtime.getRuntime().exec(path);	//Run Minesweeper
-		Thread.sleep(2000);	//Wait for the program to load
-		window.getWindow();	//Save the Image
+		Thread.sleep(2000);								//Wait for the program to load
+		window.getWindow();								//Save the Image
 		
 		return p;
 	}
