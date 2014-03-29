@@ -1,6 +1,6 @@
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import CSP.CSP;
 
 
 public class Board {
@@ -8,16 +8,16 @@ public class Board {
 	private int height;
 	private int cellSize;
 	private int [] [] board;
-	private double [] [] valuedBoard;
 	private Calibration window;
+	private CSP solver;
 	
 	public Board(int w, int h, int _cellSize, Calibration calibration) {
 		this.window = calibration;
 		this.cellSize = _cellSize;
 		this.widht = w;
-		this.height = h;
+		this.height = h;	
 		this.board = new int[w][h];			//Contains Board
-		this.valuedBoard = new double[w][h]; 	//Contains Board with each cells heuristic
+		this.solver = new CSP(w, h);
 	}
 	
 	public void info() {
@@ -25,18 +25,37 @@ public class Board {
 		System.out.println("Height: " + height*cellSize + " [ " + height + " ]");
 		System.out.println("Cell Size: " + cellSize);
 	}
+	
+	public void print() {
+		int i, j;
+		
+		for(i = 0; i < height; i++) {
+			for(j = 0; j < widht; j++) {
+				if(board[j][i] == -1)
+					System.out.print("| " + board[j][i] + " |");
+				else
+					System.out.print("|  " + board[j][i] + " |");
+			}
+			
+			System.out.println();
+		}
+	}
 
 	public void touch() throws InterruptedException {
-		for(int i = 0; i < widht; i++) {
-			for(int j = 0; j < height; j++) {
+		int i, j;
+		
+		for(i = 0; i < widht; i++) {
+			for(j = 0; j < height; j++) {
 				window.moveTo(i, j);
 			}
 		}
 	}
 
 	public boolean isWin() {
-		for(int i = 0; i < widht; i++) {
-			for(int j = 0; j < height; j++) {
+		int i, j;
+		
+		for(i = 0; i < widht; i++) {
+			for(j = 0; j < height; j++) {
 				if(board[i][j] == 0)
 					return false;
 			}
@@ -46,28 +65,17 @@ public class Board {
 	}
 
 	public void makeMove() throws InterruptedException {
-		int bestX = 0, bestY = 0;
-		double bestPrecent = 0;
-				
-		for(int i = 0; i < widht; i++) {
-			for(int j = 0; j < height; j++) {
-				if(valuedBoard[i][j] > bestPrecent) {
-					bestPrecent = valuedBoard[i][j];
-					bestX = i;
-					bestY = j;
-				}
-			}
-		}
-		
-		window.mousePress(bestX, bestY);
+		Point p = solver.getNextMove();
+
+		window.mousePress(p.x, p.y);
 		Thread.sleep(500);
 		
-		/* Does Its thing */
-		
+		/* Update board */
 		BufferedImage myBoard = window.getBoard(widht ,height);
-		
 		analyzeMove(myBoard);
-		System.out.println("Done");
+	
+		solver.removePointFromConstraints(p);
+		solver.newConstraintFromPoint(p, board[p.x][p.y]);
 	}
 
 	private void analyzeMove(BufferedImage myBoard) throws InterruptedException {
@@ -76,9 +84,6 @@ public class Board {
 		for(i = 0; i < widht; i++) {
 			for(j = 0; j < height; j++) {
 				c = window.getCell(i, j, myBoard);
-
-				System.out.print("["+i+"]["+j+"]");
-				Color.toString(c);
 				setCell(c, i, j, myBoard);
 			}
 		}
@@ -95,9 +100,7 @@ public class Board {
 	    	board[x][y] = 3;
 	    } else if(Color.isFour(pos, myBoard)) {				//Cell is 4
 	    	board[x][y] = 4;
-	    } else if(Color.isGray(c)) {	//Empty Cell
+	    } else												//Empty Cell
 	    	board[x][y] = -1;
-		} else
-			System.out.println("Not Found");
 	}
 }

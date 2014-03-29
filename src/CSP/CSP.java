@@ -139,8 +139,8 @@ public class CSP {
 	public Point getNextMove() {
 		List<Point> clearPoints = getKnownClearPoints(); 
 		if (clearPoints.size() == 0) {
-			System.out.println("Returning random point");
-			return new Point(randomIntInRange(0, knownPoints.length-1), randomIntInRange(0, knownPoints[0].length-1));
+			return new Point(0, 0);
+			//return new Point(randomIntInRange(0, knownPoints.length-1), randomIntInRange(0, knownPoints[0].length-1));
 		}
 		else {
 			System.out.println("Returning clear point " + clearPoints.get(0).x + "." + clearPoints.get(0).y);
