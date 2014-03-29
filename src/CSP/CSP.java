@@ -202,7 +202,8 @@ public class CSP {
 				min = value;
 				bestPoint = p; 
 			}
-		}
+		}		
+		System.out.println("Selecting " + bestPoint.x + "." + bestPoint.y + ", which has a " + min + " chance of being a bomb");
 		return bestPoint; 
 	}
 	
