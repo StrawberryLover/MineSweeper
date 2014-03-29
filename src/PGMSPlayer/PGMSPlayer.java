@@ -22,7 +22,7 @@ public class PGMSPlayer implements Strategy {
 		csp = new CSP(xSize, ySize);
 		initState(xSize, ySize);
 		firstMove(); 
-		csp.newConstraint(lastMove, lastResult);
+		csp.newConstraintFromPoint(lastMove, lastResult);
 		Point p; 
 		boolean play = true; 
 		while (play) {
@@ -42,8 +42,8 @@ public class PGMSPlayer implements Strategy {
 		//-1 is programmer minesweeper for BOOM, so no need to add anything
 		if (lastResult != -1) {
 			state[p.x][p.y] = lastResult; 
-			csp.removeConstraints(lastMove);
-			csp.newConstraint(p,  lastResult);
+			csp.removePointFromConstraints(lastMove);
+			csp.newConstraintFromPoint(p,  lastResult);
 		}
 	}
 	

@@ -77,8 +77,8 @@ public class Board {
 		BufferedImage myBoard = window.getBoard(widht ,height);
 		analyzeMove(myBoard);
 	
-		solver.removeConstraints(p);
-		solver.newConstraint(p, board[p.x][p.y]);
+		solver.removePointFromConstraints(p);
+		solver.newConstraintFromPoint(p, board[p.x][p.y]);
 	}
 
 	private void analyzeMove(BufferedImage myBoard) throws InterruptedException {
