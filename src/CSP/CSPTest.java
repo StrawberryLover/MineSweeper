@@ -217,6 +217,47 @@ public class CSPTest {
 		assertEquals(2, csp.constraints.get(2).cells.size());
 	}
 	
+	@Test
+	public void testSelectBestNonClear() {
+		csp = new CSP(7,7); 
+		csp.newConstraintFromPoint(new Point(0,0), 1);
+		csp.newConstraintFromPoint(new Point(0,1), 3);
+		csp.newConstraintFromPoint(new Point(0,4), 1);
+		csp.newConstraintFromPoint(new Point(0,5), 0);
+		csp.newConstraintFromPoint(new Point(0,6), 0);
+		
+		csp.newConstraintFromPoint(new Point(1,4), 2);
+		csp.newConstraintFromPoint(new Point(1,5), 1);
+		csp.newConstraintFromPoint(new Point(1,6), 0);
+		
+		csp.newConstraintFromPoint(new Point(2,3), 6);
+		csp.newConstraintFromPoint(new Point(2,5), 2);
+		csp.newConstraintFromPoint(new Point(2,6), 0);
+		
+		csp.newConstraintFromPoint(new Point(3,5), 2);
+		csp.newConstraintFromPoint(new Point(3,6), 0);
+
+		csp.newConstraintFromPoint(new Point(4,2), 5);
+		csp.newConstraintFromPoint(new Point(4,4), 4);
+		csp.newConstraintFromPoint(new Point(4,5), 2);
+		csp.newConstraintFromPoint(new Point(4,6), 0);
+
+		csp.newConstraintFromPoint(new Point(5,0), 1);
+		csp.newConstraintFromPoint(new Point(5,1), 3);
+		csp.newConstraintFromPoint(new Point(5,3), 5);
+		csp.newConstraintFromPoint(new Point(5,5), 1);
+		csp.newConstraintFromPoint(new Point(5,6), 0);
+		
+		csp.newConstraintFromPoint(new Point(6,1), 2);
+		csp.newConstraintFromPoint(new Point(6,4), 2);
+		csp.newConstraintFromPoint(new Point(6,5), 1);
+		csp.newConstraintFromPoint(new Point(6,6), 0);
+		
+		assertEquals(new Point(4,0), csp.selectBestNonClear());
+	}
+	
+
+	
 	private void setUpEnd2End() {
 		csp.knownPoints = new int[5][5]; 
 		for (int i = 0; i < 5; i++) 

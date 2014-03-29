@@ -1,7 +1,9 @@
 package CSP;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CSP {
 	int [][] knownPoints; 
@@ -49,7 +51,7 @@ public class CSP {
 	public void newConstraintFromPoint(Point origin, int value) {
 		System.out.println("Adding constraint to point " + origin.x + "." + origin.y + " value " + value);
 		List<Point> points = new ArrayList<Point>();
-		
+		knownPoints[origin.x][origin.y] = value; 
 		//add every point around the point to the constraint if it is unknown
 		int i, n; 
 		for (i = -1; i < 2; i++) {
@@ -139,13 +141,75 @@ public class CSP {
 	public Point getNextMove() {
 		List<Point> clearPoints = getKnownClearPoints(); 
 		if (clearPoints.size() == 0) {
-			System.out.println("Returning random point");
-			return new Point(randomIntInRange(0, knownPoints.length-1), randomIntInRange(0, knownPoints[0].length-1));
+			//System.out.println("Returning random point");
+			//return new Point(randomIntInRange(0, knownPoints.length-1), randomIntInRange(0, knownPoints[0].length-1));
+			//We evaluate the chances of each point being a bomb and get the least bad one. 
+			return selectBestNonClear();
 		}
 		else {
 			System.out.println("Returning clear point " + clearPoints.get(0).x + "." + clearPoints.get(0).y);
+			if (knownPoints[clearPoints.get(0).x][clearPoints.get(0).y] != -1) {
+				//if we're returning a point that has already been looked at as a valid move, something is wrong 
+				System.out.println("ERROR: Returning known point as valid move!");
+			}
 			return clearPoints.get(0);
 		}
+	}
+	
+	
+	/**
+	 * Evaluates the non-clear points. 
+	 * Looks at every constraint containing each non-clear point. Calculates chance of that point being a bomb according to that constraint.
+	 * Averages out the chances from all the constraints involving the point. 
+	 * The point with the lowest total chance is selected.
+	 */
+	public Point selectBestNonClear() {
+		Map<Point, Double> possibles = new HashMap<Point, Double>(); 
+		for (Constraint c : constraints) {
+			//If the constraint has a value of 1 and length of one, it's a bomb. 
+			if (!(c.cells.size() == 1 && c.value == 1)) {
+				for (Point p : c.cells) {
+					if (possibles.containsKey(p)) {
+						//If it's already listed, we want to update the probability
+						double oldChance = possibles.get(p); 
+						double newChance = integerDivisionToDouble(c.value, c.cells.size());
+						//We're pessimists, so if the new chance is worse than the old chance, we replace the old chance. 
+						if (newChance > oldChance) {
+							possibles.remove(p); 
+							possibles.put(p, newChance);
+						}
+					}
+					else {
+						//if it's a new possibility, add it to the map with the probability that this constraint gives us
+						possibles.put(p, integerDivisionToDouble(c.value, c.cells.size()));
+					}
+				}
+			}
+			else {
+				//If it's a bomb we want to  check if it's listed as a possibility and remove it
+				if (possibles.containsKey(c.cells.get(0))) {
+					possibles.remove(c.cells.get(0));
+				}
+			}
+		}
+		
+		double min = Double.POSITIVE_INFINITY; 
+		Point bestPoint = null; 
+		for (Map.Entry entry : possibles.entrySet()) {
+			Point p = (Point) entry.getKey(); 
+			Double value = (Double) entry.getValue();
+			if ((value < min) && (knownPoints[p.x][p.y] == -1)){
+				min = value;
+				bestPoint = p; 
+			}
+		}
+		return bestPoint; 
+	}
+	
+	private double integerDivisionToDouble(int val1, int val2) {
+		double d1 = val1; 
+		double d2 = val2; 
+		return d1/d2; 
 	}
 	
 	private int randomIntInRange(int min, int max) {
