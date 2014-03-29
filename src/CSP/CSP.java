@@ -193,6 +193,7 @@ public class CSP {
 			}
 		}
 		
+		//Select the least bad result
 		double min = Double.POSITIVE_INFINITY; 
 		Point bestPoint = null; 
 		for (Map.Entry entry : possibles.entrySet()) {
@@ -203,6 +204,7 @@ public class CSP {
 				bestPoint = p; 
 			}
 		}
+		System.out.println("Selecting " + bestPoint.x + "." + bestPoint.y + ", which has a " + min + " chance of being a bomb");
 		return bestPoint; 
 	}
 	
