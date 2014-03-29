@@ -96,9 +96,16 @@ public class CSPTest {
 		assertEquals(new Point(6,6), csp.constraints.get(2).cells.get(1));
 	}
 	
+	private void setUpTestNewConstraint() {
+		csp.knownPoints = new int[3][3]; 
+		for (int i = 0; i < 3; i++) 
+			for (int n = 0; n < 3; n++) 
+				csp.knownPoints[i][n] = -1;
+	}
+	
 	@Test
 	public void testNewConstraintFromPoint1() {
-		csp.knownPoints = new int[3][3]; 
+		setUpTestNewConstraint(); 
 		csp.newConstraintFromPoint(new Point(1,1), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(8, csp.constraints.get(0).cells.size());
@@ -110,7 +117,7 @@ public class CSPTest {
 	
 	@Test
 	public void testNewConstraintFromPoint2() {
-		csp.knownPoints = new int[3][3]; 
+		setUpTestNewConstraint(); 
 		csp.newConstraintFromPoint(new Point(0,0), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(3, csp.constraints.get(0).cells.size());
@@ -121,7 +128,7 @@ public class CSPTest {
 	
 	@Test
 	public void testNewConstraintFromPoint3() {
-		csp.knownPoints = new int[3][3]; 
+		setUpTestNewConstraint(); 
 		csp.newConstraintFromPoint(new Point(2,2), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(3, csp.constraints.get(0).cells.size());
@@ -132,7 +139,7 @@ public class CSPTest {
 	
 	@Test
 	public void testNewConstraintFromPoint4() {
-		csp.knownPoints = new int[3][3]; 
+		setUpTestNewConstraint(); 
 		csp.newConstraintFromPoint(new Point(1,2), 2); 
 		assertEquals(1, csp.constraints.size()); 
 		assertEquals(5, csp.constraints.get(0).cells.size());
@@ -208,5 +215,20 @@ public class CSPTest {
 		assertEquals(3, csp.constraints.get(0).cells.size());
 		assertEquals(2, csp.constraints.get(1).cells.size());
 		assertEquals(2, csp.constraints.get(2).cells.size());
+	}
+	
+	private void setUpEnd2End() {
+		csp.knownPoints = new int[5][5]; 
+		for (int i = 0; i < 5; i++) 
+			for (int n = 0; n < 5; n++) 
+				csp.knownPoints[i][n] = -1;
+	}
+	
+	@Test
+	public void end2endTest1() {
+		csp = new CSP(5,5); 
+		csp.newConstraintFromPoint(new Point(3,3), 0); 
+		assertEquals(new Point(2,2), csp.getNextMove()); 
+		
 	}
 }
