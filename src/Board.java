@@ -21,9 +21,9 @@ public class Board {
 	}
 	
 	public void info() {
-		System.out.println("Width: " + widht*cellSize + " [ " + widht + " ]");
-		System.out.println("Height: " + height*cellSize + " [ " + height + " ]");
-		System.out.println("Cell Size: " + cellSize);
+		//System.out.println("Width: " + widht*cellSize + " [ " + widht + " ]");
+		//System.out.println("Height: " + height*cellSize + " [ " + height + " ]");
+		//System.out.println("Cell Size: " + cellSize);
 	}
 	
 	public void print() {
@@ -37,7 +37,7 @@ public class Board {
 					System.out.print("|  " + board[j][i] + " |");
 			}
 			
-			System.out.println();
+			//System.out.println();
 		}
 	}
 

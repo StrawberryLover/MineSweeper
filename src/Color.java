@@ -123,6 +123,6 @@ public class Color {
 	    int g = (c >> 8) & 0xFF;
 	    int b = c & 0xFF;
 	    
-	    System.out.println("("+r+", "+g+", "+b+")");
+	    //System.out.println("("+r+", "+g+", "+b+")");
 	}
 }

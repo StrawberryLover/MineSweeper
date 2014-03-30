@@ -10,11 +10,12 @@ public class CSP {
 	List<Constraint> constraints; 
 	
 	public CSP (int boardSizeX, int boardSizeY) {
-		knownPoints = new int[boardSizeX][boardSizeY]; 
+		knownPoints = new int[boardSizeX][boardSizeY];
+		
 		for (int i = 0; i < boardSizeX; i++) 
 			for (int n = 0; n < boardSizeY; n++) 
 				knownPoints[i][n] = -1;
-		construct();
+		construct(); 
 	}
 	
 	public CSP() {
@@ -49,7 +50,7 @@ public class CSP {
 	 *  to a constraint with the value of the point. 
 	 */
 	public void newConstraintFromPoint(Point origin, int value) {
-		System.out.println("Adding constraint to point " + origin.x + "." + origin.y + " value " + value);
+		//System.out.println("Adding constraint to point " + origin.x + "." + origin.y + " value " + value);
 		List<Point> points = new ArrayList<Point>();
 		knownPoints[origin.x][origin.y] = value; 
 		//add every point around the point to the constraint if it is unknown
@@ -87,7 +88,7 @@ public class CSP {
 	 * This should be called every time a new constraint is added to the list. 
 	 */
 	public void simplifyConstraints() {
-		System.out.println("Simplifying constraints...");
+		//System.out.println("Simplifying constraints...");
 		int i, n;
 		for (i = 0; i < constraints.size(); i++) {
 			for (n = 0; n < constraints.size(); n++) {
@@ -123,14 +124,14 @@ public class CSP {
 	 * Ex: The value of a constraint is 0, and it contains 0,1 and 0,2. Both are known to be not bombs. 
 	 */
 	public List<Point> getKnownClearPoints() {
-		System.out.println("Getting clear points...");
+		//System.out.println("Getting clear points...");
 		List<Point> clear = new ArrayList<Point>(); 
 		for (Constraint c : constraints) {
 			if (c.value == 0) {
 				clear.addAll(c.cells); 
 			}
 		}
-		System.out.println("Found " + clear.size() + " clear points");
+		//System.out.println("Found " + clear.size() + " clear points");
 		return clear; 
 	}
 	
@@ -141,16 +142,16 @@ public class CSP {
 	public Point getNextMove() {
 		List<Point> clearPoints = getKnownClearPoints(); 
 		if (clearPoints.size() == 0) {
-			//System.out.println("Returning random point");
+			////System.out.println("Returning random point");
 			//return new Point(randomIntInRange(0, knownPoints.length-1), randomIntInRange(0, knownPoints[0].length-1));
 			//We evaluate the chances of each point being a bomb and get the least bad one. 
 			return selectBestNonClear();
 		}
 		else {
-			System.out.println("Returning clear point " + clearPoints.get(0).x + "." + clearPoints.get(0).y);
+			//System.out.println("Returning clear point " + clearPoints.get(0).x + "." + clearPoints.get(0).y);
 			if (knownPoints[clearPoints.get(0).x][clearPoints.get(0).y] != -1) {
 				//if we're returning a point that has already been looked at as a valid move, something is wrong 
-				System.out.println("ERROR: Returning known point as valid move!");
+				//System.out.println("ERROR: Returning known point as valid move!");
 			}
 			return clearPoints.get(0);
 		}
@@ -193,18 +194,31 @@ public class CSP {
 			}
 		}
 		
-		double min = Double.POSITIVE_INFINITY; 
-		Point bestPoint = null; 
-		for (Map.Entry entry : possibles.entrySet()) {
-			Point p = (Point) entry.getKey(); 
-			Double value = (Double) entry.getValue();
-			if ((value < min) && (knownPoints[p.x][p.y] == -1)){
-				min = value;
-				bestPoint = p; 
+		if (possibles.size() == 0) {
+			//If there are no points in any constraint that can not contain mines, we're forced to select randomly from unknown points. 
+			while (true) {
+				int randx = randomIntInRange(0, knownPoints.length - 1); 
+				int randy = randomIntInRange(0, knownPoints[0].length - 1);
+				if (knownPoints[randx][randy] == -1) {
+					return new Point(randx, randy); 
+				}
 			}
-		}		
-		System.out.println("Selecting " + bestPoint.x + "." + bestPoint.y + ", which has a " + min + " chance of being a bomb");
-		return bestPoint; 
+			
+		}
+		else {
+			double min = Double.POSITIVE_INFINITY; 
+			Point bestPoint = null;
+			for (Map.Entry entry : possibles.entrySet()) {
+				Point p = (Point) entry.getKey(); 
+				Double value = (Double) entry.getValue();
+				if ((value < min) && (knownPoints[p.x][p.y] == -1)){
+					min = value;
+					bestPoint = p; 
+				}
+			}		
+			//System.out.println("Selecting " + bestPoint.x + "." + bestPoint.y + ", which has a " + min + " chance of being a bomb");
+			return bestPoint;
+		}
 	}
 	
 	private double integerDivisionToDouble(int val1, int val2) {
